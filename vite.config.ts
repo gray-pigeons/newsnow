@@ -43,19 +43,21 @@ export default defineConfig({
     nitro(),
   ],
    // ✅ 添加以下 build 配置
-  build: {
-    chunkSizeWarningLimit: 1000, // 将警告阈值调整为 1000 kB（根据需要调整）
+ build: {
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        manualChunks: {
-          // 将 React 相关库单独打包
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          // 将 UI 相关库单独打包
-          'ui-vendor': ['@tanstack/react-router', '@tanstack/router-plugin'],
-          // 将状态管理相关库单独打包
-          'state-vendor': ['jotai', 'jotai/utils'],
-          // 将工具库单独打包
-          'utils-vendor': ['clsx', 'dotenv'],
+        manualChunks(id) {
+          // 只对 node_modules 中的依赖进行拆分
+          if (id.includes('node_modules')) {
+            // 提取包名（支持 scoped 包）
+            const match = id.match(/node_modules\/(?:@[^/]+\/)?([^/]+)/);
+            if (match) {
+              const pkgName = match[1];
+              // 你可以为某些大库指定单独分组，或者统一放在 vendor 中
+              return `vendor-${pkgName}`;
+            }
+          }
         },
       },
     },
