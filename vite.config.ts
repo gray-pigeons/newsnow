@@ -42,4 +42,22 @@ export default defineConfig({
     pwa(),
     nitro(),
   ],
+   // ✅ 添加以下 build 配置
+  build: {
+    chunkSizeWarningLimit: 1000, // 将警告阈值调整为 1000 kB（根据需要调整）
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // 将 React 相关库单独打包
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          // 将 UI 相关库单独打包
+          'ui-vendor': ['@tanstack/react-router', '@tanstack/router-plugin'],
+          // 将状态管理相关库单独打包
+          'state-vendor': ['jotai', 'jotai/utils'],
+          // 将工具库单独打包
+          'utils-vendor': ['clsx', 'dotenv'],
+        },
+      },
+    },
+  },
 })
