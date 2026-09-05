@@ -44,22 +44,6 @@ export default defineConfig({
   ],
    // ✅ 添加以下 build 配置
  build: {
-    chunkSizeWarningLimit: 1000,
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          // 只对 node_modules 中的依赖进行拆分
-          if (id.includes('node_modules')) {
-            // 提取包名（支持 scoped 包）
-            const match = id.match(/node_modules\/(?:@[^/]+\/)?([^/]+)/);
-            if (match) {
-              const pkgName = match[1];
-              // 你可以为某些大库指定单独分组，或者统一放在 vendor 中
-              return `vendor-${pkgName}`;
-            }
-          }
-        },
-      },
-    },
-  },
+  chunkSizeWarningLimit: 1000,  // 提高警告阈值，单位 kB
+}
 })
